@@ -24,9 +24,15 @@ io.on('connection',(socket)=>{
     console.log('New Webscoket connection');
 
     socket.emit('message','Welcome to Real Time Chat Web Application');
+    socket.broadcast.emit('message','New user joined the chat');
+
     socket.on('sendMessage',(message)=>{
         //socket.emit('countUpdated',count)
         io.emit('message',message); // Broadcast to each screen
+    })
+
+    socket.on('disconnect',()=>{
+        io.emit('message','User has left');
     })
 })
 
