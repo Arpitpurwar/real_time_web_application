@@ -19,9 +19,18 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 //Render public folder to UI
 app.use(express.static(publicDirectoryPath))
 
+let count = 0;
 // Web socket connection
-io.on('connection',()=>{
+io.on('connection',(socket)=>{
     console.log('New Webscoket connection');
+
+    socket.emit('countUpdated',count);
+    socket.on('increment',()=>{
+        count++;
+        //socket.emit('countUpdated',count)
+        io.emit('countUpdated',count); // Broadcast to each screen
+    }
+    )
 })
 
 // Listen server on Defined Port
