@@ -37,8 +37,9 @@ io.on('connection',(socket)=>{
         callback()
     })
 
-    socket.on('sendLocation',(position)=>{
-        io.emit('message',`Location : ${position.Lat ,position.Long  }`)
+    socket.on('sendLocation',(position,callback)=>{
+        io.emit('message',`Location : ${position.Lat ,position.Long  }`);
+        callback()
     })
     socket.on('disconnect',()=>{
         io.emit('message','User has left');
