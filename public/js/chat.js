@@ -9,7 +9,8 @@ const $messageTemplate = document.querySelector('#message-template').innerHTML;
 socket.on('message',(message)=>{
     console.log('Message From Server',message);
     const html = Mustache.render($messageTemplate,{
-        message
+        message : message.text,
+        createdAt : moment(message.createdAt).format('h:mm a')
     });
     $messageDiv.insertAdjacentHTML('beforeend',html);
 ;})

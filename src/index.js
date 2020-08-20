@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path')
 const socketio  = require('socket.io');
 const Filter = require('bad-words');
+const { generateMessage } =require('./utlis/message')
 
 // Take the instance of express Constructor
 const app = express();
@@ -25,24 +26,24 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection',(socket)=>{
     console.log('New Webscoket connection');
 
-    socket.emit('message','Welcome to Real Time Chat Web Application');
-    socket.broadcast.emit('message','New user joined the chat');
+    socket.emit('message',generateMessage('Welcome'));
+    socket.broadcast.emit('message',generateMessage('New user joined the chat'));
 
     socket.on('sendMessage',(message,callback)=>{
         
         if(filter.isProfane(message)){
             return callback('Profanity is not allowed');
         }
-        io.emit('message',message); // Broadcast to each screen
+        io.emit('message',generateMessage(message)); // Broadcast to each screen
         callback()
     })
 
     socket.on('sendLocation',(position,callback)=>{
-        io.emit('message',`Location : ${position.Lat ,position.Long  }`);
+        io.emit('message',generateMessage(`Location : ${position.Lat ,position.Long  }`));
         callback()
     })
     socket.on('disconnect',()=>{
-        io.emit('message','User has left');
+        io.emit('message',generateMessage('User has left'));
     })
     
 })
