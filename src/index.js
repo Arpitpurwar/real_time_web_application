@@ -26,8 +26,15 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection',(socket)=>{
     console.log('New Webscoket connection');
 
-    socket.emit('message',generateMessage('Welcome'));
-    socket.broadcast.emit('message',generateMessage('New user joined the chat'));
+    // socket.emit('message',generateMessage('Welcome'));
+    // socket.broadcast.emit('message',generateMessage('New user joined the chat'));
+
+        // join room 
+    socket.on('join',({username, room})=>{
+        socket.join(room);
+        socket.emit('message',generateMessage('Welcome'));
+        socket.broadcast.to(room).emit('message',generateMessage(` ${username} has joined ! `));
+    })    
 
     socket.on('sendMessage',(message,callback)=>{
         
@@ -42,9 +49,14 @@ io.on('connection',(socket)=>{
         io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         callback()
     })
+    
+
+    
     socket.on('disconnect',()=>{
         io.emit('message',generateMessage('User has left'));
     })
+
+
     
 })
 
